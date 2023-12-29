@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 import hashlib
 import datetime
+from . import db
 
 db = SQLAlchemy()
 
