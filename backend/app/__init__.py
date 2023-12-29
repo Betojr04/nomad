@@ -1,4 +1,8 @@
-# backend/app/__init__.py
+"""
+This module initializes the Flask application, sets up database configurations,
+and registers the application routes.
+"""
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from .config import Config
@@ -6,6 +10,15 @@ from flask_migrate import Migrate
 
 db = SQLAlchemy()
 
+"""
+    Create and configure an instance of the Flask application.
+
+    Initializes the database and migrations using Flask-SQLAlchemy and Flask-Migrate.
+    Registers the 'api' Blueprint for handling routes.
+
+    Returns:
+        app: The Flask application instance.
+    """
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
