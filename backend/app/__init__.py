@@ -7,6 +7,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from .config import Config
 from flask_migrate import Migrate
+from flask_jwt_extended import JWTManager
 
 db = SQLAlchemy()
 
@@ -25,6 +26,8 @@ def create_app():
 
     db.init_app(app)
     Migrate(app, db)
+    
+    jwt=JWTManager(app)
 
     # Import routes and models
     from .models import User  # Assuming User is a model in models.py
@@ -34,3 +37,4 @@ def create_app():
     app.register_blueprint(api)
     
     return app
+

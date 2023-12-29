@@ -48,6 +48,18 @@ class User(db.Model):
             password (str): The plaintext password to hash and store.
         """
         self.password_hash = hashlib.sha256(password.encode()).hexdigest()
+        
+    def check_password(self, password):
+        """
+        Check if the provided password matches the stored hashed password.
+
+        Args:
+            password (str): The plaintext password to verify.
+
+        Returns:
+            bool: True if the password matches, False otherwise.
+        """
+        return self.password_hash == hashlib.sha256(password.encode()).hexdigest()
     
     def serialize(self):
         """
