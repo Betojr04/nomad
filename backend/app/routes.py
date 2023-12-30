@@ -6,11 +6,6 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_tok
 
 api = Blueprint('api', __name__)
 
-
-# @api.route('/')
-# def hello():
-#     return 'Hello, World!'
-
 # ROUTE REGISTERING A NEW USER
 @api.route('/register', methods=['POST'])
 def register_new_user():
