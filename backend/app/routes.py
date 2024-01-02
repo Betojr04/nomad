@@ -119,15 +119,47 @@ def update_profile():
 @jwt_required()
 def change_password():
     current_user = get_jwt_identity()
+    print("Current User:", current_user)
+
     user = User.query.filter_by(username=current_user).first()
-    
+
     if not user:
-        return jsonify({"error" : "User does not exist"}), 404
-    
+        return jsonify({'error': 'User not found'}), 404
+
     data = request.get_json()
-    user.set_password(data['password'])
-    
+    current_password = data.get('current_password')
+    new_password = data.get('new_password')
+
+    if not current_password:
+        return jsonify({'error': 'Current password is required'}), 400
+
+    if not new_password:
+        return jsonify({'error': 'New password is required'}), 400
+
+    if not user.check_password(current_password):
+        return jsonify({'error': 'Current password is incorrect'}), 401
+
+    if user.check_password(new_password):
+        return jsonify({'error': 'New password must be different'}), 400
+
+    user.set_password(new_password)
     db.session.commit()
-    return jsonify({"message": "Password changed successfully"}), 200
+
+    return jsonify({'message': 'Password updated successfully'}), 200
+
 
 # ROUTE FOR DELETING A USER'S PROFILE
+@api.route('/delete-account', methods=['DELETE'])
+@jwt_required()
+def delete_account():
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(username=current_user).first()
+
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    db.session.delete(user)
+    db.session.commit()
+
+    return jsonify({'message': 'Account deleted successfully'}), 200
+
