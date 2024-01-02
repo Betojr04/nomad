@@ -2,6 +2,8 @@ from flask import Blueprint, jsonify, request
 from app.models import db, User
 from flask_cors import CORS
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 
 api = Blueprint('api', __name__)
@@ -108,6 +110,22 @@ def update_profile():
     
     db.session.commit()
     return jsonify({"message": "User updated successfully"}), 200
-        
+
+
+# ROUTE FOR CHANGING A USER'S PASSWORD
+@api.route('/change_password', methods=['PUT'])
+@jwt_required()
+def change_password():
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(username=current_user).first()
+    
+    if not user:
+        return jsonify({"error" : "User does not exist"}), 404
+    
+    data = request.get_json()
+    user.set_password(data['password'])
+    
+    db.session.commit()
+    return jsonify({"message": "Password changed successfully"}), 200
 
 # ROUTE FOR DELETING A USER'S PROFILE
