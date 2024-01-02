@@ -93,5 +93,21 @@ def get_user_profile():
     
 
 # ROUTE FOR UPDATING A USER'S PROFILE
+@api.route('/update_profile', methods=['PUT'])
+@jwt_required
+def update_profile():
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(username=current_user).first()
+    
+    if not user:
+        return jsonify({"error" : "User does not exist"}), 404
+    
+    data = request.get_json()
+    user.email_address = data['email_address', user.email_address]
+    user.username = data['username', user.username]
+    
+    db.session.commit()
+    return jsonify({"message": "User updated successfully"}), 200
+        
 
 # ROUTE FOR DELETING A USER'S PROFILE
