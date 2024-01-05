@@ -30,6 +30,7 @@ class User(db.Model):
     email_address = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(80), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    itinerary = db.relationship('Itinerary', backref='user', lazy=True)
     
     def __repr__(self):
         """
@@ -74,3 +75,14 @@ class User(db.Model):
             'email_address': self.email_address,
             'created_at': self.created_at
         }
+        
+class Itinerary(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    itinerary_name = db.Column(db.String(80), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    events = db.relationship('Event', backref='itinerary', lazy=True)
+    locations = db.relationship('Location', backref='itinerary', lazy=True)
+    
+class Locations(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
