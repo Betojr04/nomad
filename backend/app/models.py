@@ -82,7 +82,11 @@ class Itinerary(db.Model):
     itinerary_name = db.Column(db.String(80), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     events = db.relationship('Event', backref='itinerary', lazy=True)
-    locations = db.relationship('Location', backref='itinerary', lazy=True)
+    time_of_event = db.Column(db.Datetime, default=datetime.datetime.utcnow)
+    event_name = db.Column(db.String(80), nullable=False)
+    event_description = db.Column(db.String(80), nullable=False)
+    event_location = db.Column(db.String(80), nullable=False)
+    
     
 class Locations(db.Model):
     id = db.Column(db.Integer, primary_key=True)

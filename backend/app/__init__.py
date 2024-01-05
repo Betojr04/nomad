@@ -32,9 +32,11 @@ def create_app():
     # Import routes and models
     from .models import User  # Assuming User is a model in models.py
     from .routes import api  # Assuming api is defined in routes.py
+    from .itineraryRoutes import itinerary # Assuming itinerary is defined in itineraryRoutes.py
 
     # Register the api Blueprint with the app
     app.register_blueprint(api)
+    itinerary.register_blueprint(itinerary)
     
     return app
 
