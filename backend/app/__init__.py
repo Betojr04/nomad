@@ -36,7 +36,7 @@ def create_app():
 
     # Register the api Blueprint with the app
     app.register_blueprint(api)
-    itinerary.register_blueprint(itinerary)
+    app.register_blueprint(itinerary)
     
     return app
 

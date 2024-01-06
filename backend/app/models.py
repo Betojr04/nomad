@@ -76,17 +76,43 @@ class User(db.Model):
             'created_at': self.created_at
         }
         
+# DATA MODEL FOR ITINERARIES
 class Itinerary(db.Model):
+
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id')) 
     itinerary_name = db.Column(db.String(80), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    events = db.relationship('Event', backref='itinerary', lazy=True)
-    time_of_event = db.Column(db.Datetime, default=datetime.datetime.utcnow)
+    events = db.relationship('Event', backref='itinerary', lazy=True)  
+    
+
+# DATA MODEL FOR EVENTS
+class Event(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+    itinerary_id = db.Column(db.Integer, db.ForeignKey('itinerary.id')) 
+    time_of_event = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     event_name = db.Column(db.String(80), nullable=False)
     event_description = db.Column(db.String(80), nullable=False)
     event_location = db.Column(db.String(80), nullable=False)
+    event_address = db.Column(db.String(80), nullable=False)
+    event_city = db.Column(db.String(80), nullable=False)
+    event_state = db.Column(db.String(80), nullable=False)
     
-    
+    def serialize(self):
+        return {
+            'id': self.id,
+            'itinerary_id': self.itinerary_id,
+            'time_of_event': self.time_of_event,
+            'event_name': self.event_name,
+            'event_description': self.event_description,
+            'event_location': self.event_location,
+            'event_address': self.event_address,
+            'event_city': self.event_city,
+            'event_state': self.event_state
+        }
+        
+        
+# DATA MODEL FOR LOCATIONS
 class Locations(db.Model):
     id = db.Column(db.Integer, primary_key=True)
