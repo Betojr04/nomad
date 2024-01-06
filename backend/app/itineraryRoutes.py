@@ -6,7 +6,9 @@ from datetime import datetime
 
 itinerary = Blueprint('itinerary', __name__)
 
-# ROUTE FOR CREATING AN ITINERARY
+"""
+ROUTE FOR CREATING AN ITINERARY
+"""
 @itinerary.route('/create-itinerary', methods=['POST'])
 @jwt_required()
 def create_itinerary():
@@ -60,29 +62,37 @@ def create_itinerary():
         # Log this exception, as it's unexpected
         return jsonify({'error': 'An unexpected error occurred'}), 500
 
-# ROUTE FOR GETTING AN ITINERARY
+"""
+ROUTE FOR GETTING AN ITINERARY BY ID OR NAME, OR LISTING ALL ITINERARIES
+"""
 @itinerary.route('/itineraries', methods=['GET'])
 @jwt_required()
-def get_itinerary():
+def get_or_list_itineraries():
+    
     """
-    Endpoint for retrieving an itinerary. Supports fetching by ID or name.
-    The query adjusts based on the provided parameter. If no itinerary is found,
-    it responds with an error.
+    Endpoint for retrieving an itinerary. Supports fetching by ID or name or listing all itineraries.
+    The query adjusts based on the provided parameter. If no itinerary is found, it will list all of them.
     """
+    
     current_user = get_jwt_identity()
     itinerary_id = request.args.get('id')
     itinerary_name = request.args.get('name')
 
     query = Itinerary.query.filter_by(user_id=current_user)
-    
+
+    # Apply filters if provided
     if itinerary_id:
         query = query.filter_by(id=itinerary_id)
     elif itinerary_name:
         query = query.filter(Itinerary.itinerary_name.ilike(f'%{itinerary_name}%'))
 
-    itinerary = query.first()
+    itineraries = query.all()
 
-    if itinerary is None:
-        return jsonify({'error': 'Itinerary not found'}), 404
+    if not itineraries:
+        return jsonify({'error': 'No itineraries found'}), 404
 
-    return jsonify(itinerary.serialize()), 200
+    return jsonify([itinerary.serialize() for itinerary in itineraries]), 200
+
+
+
+
