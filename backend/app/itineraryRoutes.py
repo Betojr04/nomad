@@ -94,5 +94,39 @@ def get_or_list_itineraries():
     return jsonify([itinerary.serialize() for itinerary in itineraries]), 200
 
 
+"""
+ENDPOINT FOR UPDATING AN ITINERARY
+"""
 
 
+
+"""
+ENDPOINT FOR DELETING AN ITINERARY
+"""
+@itinerary.route('/itineraries/delete', methods=['DELETE'])
+@jwt_required()
+def delete_itinerary():
+    current_user = get_jwt_identity()
+    data = request.json
+    itinerary_id = data.get('id')
+    itinerary_name = data.get('name')
+
+    query = Itinerary.query.filter_by(user_id=current_user)
+    if itinerary_id:
+        query = query.filter_by(id=itinerary_id)
+    elif itinerary_name:
+        query = query.filter(Itinerary.itinerary_name.ilike(f'%{itinerary_name}%'))
+
+    itinerary = query.first()
+
+    if not itinerary:
+        return jsonify({'error': 'Itinerary not found'}), 404
+
+    db.session.delete(itinerary)
+
+    try:
+        db.session.commit()
+        return jsonify({'message': 'Itinerary deleted successfully'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
