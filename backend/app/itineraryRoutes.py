@@ -193,7 +193,7 @@ def share_itinerary(itinerary_id):
     
     
 # ROUTE FOR GENERATING A SHAREABLE LINK FOR AN ITINERARY
-@api.route('/itineraries/<int:itinerary_id>/share', methods=['POST'])
+@itinerary.route('/itineraries/<int:itinerary_id>/share', methods=['POST'])
 @jwt_required()
 def share_itinerary(itinerary_id):
     """
