@@ -172,10 +172,54 @@ def delete_itinerary():
         return jsonify({"error": str(e)}), 500
 
 
-# ROUTE FOR SHARE ITINERARY
-@itinerary.route('/itineraries/share', methods=['POST'])
+# ROUTE FOR SHARE ITINERARY WITHIN THE PLATFORM
+@itinerary.route('/itineraries/<int:itinerary_id>/share', methods=['POST'])
 @jwt_required()
-def share_itinerary():
+def share_itinerary(itinerary_id):
     current_user = get_jwt_identity()
+    data = request.json()
+    recipient_username = data.get('recipient_username')
     
+    itinerary = Itinerary.query.filter_by(id=itinerary_id)
+    if not itinerary or itinerary_id != current_user:
+        return jsonify({'error': 'Itinerary not found or access denied'}), 404   
+    
+    recipient_username = User.query.filter_by(username=recipient_username).first()
+    if not recipient_username:
+        return jsonify({'error': 'Recipient user not found'}), 404
+    
+    itinerary.shared_with.append(recipient_username)
+    db.session.commit()
+    
+    
+# ROUTE FOR GENERATING A SHAREABLE LINK FOR AN ITINERARY
+@api.route('/itineraries/<int:itinerary_id>/share', methods=['POST'])
+@jwt_required()
+def share_itinerary(itinerary_id):
+    """
+    Endpoint to share an itinerary. Supports sharing within the platform and generating a shareable link.
+    """
+    current_user = get_jwt_identity()
+    itinerary = Itinerary.query.filter_by(id=itinerary_id, user_id=current_user).first()
+
+    if itinerary is None:
+        return jsonify({'error': 'Itinerary not found'}), 404
+
+    data = request.get_json()
+    share_type = data.get('share_type')
+
+    if share_type not in ['platform', 'link']:
+        return jsonify({'error': 'Invalid share type'}), 400
+
+    if share_type == 'platform':
+        # Logic for sharing within the platform
+        # This could involve adding the itinerary to a shared feed, notifying other users, etc.
+        pass
+    elif share_type == 'link':
+        # Generate a shareable link
+        shareable_link = f"http://yourapp.com/itineraries/{itinerary_id}"
+        return jsonify({'message': 'Itinerary share link generated successfully', 'link': shareable_link}), 200
+
+    return jsonify({'message': 'Itinerary shared successfully'}), 200
+
     
