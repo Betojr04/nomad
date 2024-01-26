@@ -173,9 +173,9 @@ def delete_itinerary():
 
 
 # ROUTE FOR SHARE ITINERARY WITHIN THE PLATFORM
-@itinerary.route('/itineraries/<int:itinerary_id>/share', methods=['POST'])
+@itinerary.route('/itineraries/<int:itinerary_id>/share/platform', methods=['POST'])
 @jwt_required()
-def share_itinerary(itinerary_id):
+def share_itinerary_within_platform(itinerary_id):
     current_user = get_jwt_identity()
     data = request.json()
     recipient_username = data.get('recipient_username')
@@ -193,9 +193,9 @@ def share_itinerary(itinerary_id):
     
     
 # ROUTE FOR GENERATING A SHAREABLE LINK FOR AN ITINERARY
-@itinerary.route('/itineraries/<int:itinerary_id>/share', methods=['POST'])
+@itinerary.route('/itineraries/<int:itinerary_id>/share/link', methods=['POST'])
 @jwt_required()
-def share_itinerary(itinerary_id):
+def generate_shareable_link(itinerary_id):
     """
     Endpoint to share an itinerary. Supports sharing within the platform and generating a shareable link.
     """
@@ -217,7 +217,7 @@ def share_itinerary(itinerary_id):
         pass
     elif share_type == 'link':
         # Generate a shareable link
-        shareable_link = f"http://yourapp.com/itineraries/{itinerary_id}"
+        shareable_link = f"http://nomad.com/itineraries/{itinerary_id}"
         return jsonify({'message': 'Itinerary share link generated successfully', 'link': shareable_link}), 200
 
     return jsonify({'message': 'Itinerary shared successfully'}), 200
