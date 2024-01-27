@@ -20,5 +20,5 @@ class Config:
     
     
 class TestingConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:Beto@localhost:5433/nomad_test'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:Beto@localhost:5433/nomad_testing'
     TESTING = True

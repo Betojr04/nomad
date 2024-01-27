@@ -4,7 +4,7 @@ from flask import json
 
 @pytest.fixture
 def client():
-    app = create_app('testing')
+    app = create_app()
     with app.test_client() as client:
         with app.app_context():
             db.create_all()
@@ -18,7 +18,7 @@ def test_user_registration(client):
         "email_address": "testuser@example.com",
         "password": "password123"
     }
-    response = client.post('/auth/register', data=json.dumps(valid_payload), content_type='application/json')
+    response = client.post('/register', data=json.dumps(valid_payload), content_type='application/json')
 
     assert response.status_code == 201
     assert 'User created successfully' in json.loads(response.data)['message']

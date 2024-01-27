@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from app.models import db, User
 from flask_cors import CORS
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
+import traceback
 
 
 
@@ -39,6 +40,7 @@ def register_new_user():
         return jsonify({'error': "Missing username, password, or email address"}), 400
     
     except Exception as e:
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
         
         
