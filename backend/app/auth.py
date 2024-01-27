@@ -6,10 +6,11 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_tok
 
 
 
-api = Blueprint('api', __name__)
+auth = Blueprint('auth', __name__)
+CORS(auth)
 
 # ROUTE REGISTERING A NEW USER
-@api.route('/register', methods=['POST'])
+@auth.route('/register', methods=['POST'])
 def register_new_user():
     try:
         username = request.json.get('username')
@@ -42,7 +43,7 @@ def register_new_user():
         
         
 # ROUTE FOR LOGGING IN A USER
-@api.route('/login', methods=['POST'])
+@auth.route('/login', methods=['POST'])
 def login_user():
     try:
         username = request.json.get('username')
@@ -70,14 +71,14 @@ def login_user():
         return jsonify({'error': str(e)}), 500
 
 # ROUTE FOR LOGGING OUT A USER
-@api.route('/logout', methods=['POST'])
+@auth.route('/logout', methods=['POST'])
 @jwt_required()
 def logout_user():
     return jsonify({'message': "Logout successful"}), 200
     
 
 # ROUTE FOR GETTING A USER'S PROFILE
-@api.route('/get_profile', methods=['GET'])
+@auth.route('/get_profile', methods=['GET'])
 @jwt_required()
 def get_user_profile():
     try:
@@ -95,7 +96,7 @@ def get_user_profile():
     
 
 # ROUTE FOR UPDATING A USER'S PROFILE
-@api.route('/update_profile', methods=['PUT'])
+@auth.route('/update_profile', methods=['PUT'])
 @jwt_required()
 def update_profile():
     current_user = get_jwt_identity()
@@ -115,7 +116,7 @@ def update_profile():
 
 
 # ROUTE FOR CHANGING A USER'S PASSWORD
-@api.route('/change_password', methods=['PUT'])
+@auth.route('/change_password', methods=['PUT'])
 @jwt_required()
 def change_password():
     current_user = get_jwt_identity()
@@ -149,7 +150,7 @@ def change_password():
 
 
 # ROUTE FOR DELETING A USER'S PROFILE
-@api.route('/delete-account', methods=['DELETE'])
+@auth.route('/delete-account', methods=['DELETE'])
 @jwt_required()
 def delete_account():
     current_user = get_jwt_identity()

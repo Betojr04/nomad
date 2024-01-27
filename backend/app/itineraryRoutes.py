@@ -1,10 +1,12 @@
 from flask import Blueprint, jsonify, request
 from app.models import db, User, Itinerary
+from flask_cors import CORS
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from datetime import datetime
 
 itinerary = Blueprint('itinerary', __name__)
+CORS(itinerary)
 
 """
 ROUTE FOR CREATING AN ITINERARY

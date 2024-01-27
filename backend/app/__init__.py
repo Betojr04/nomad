@@ -5,9 +5,11 @@ and registers the application routes.
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from .config import Config
+from .config import Config, TestingConfig
+from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
+import os
 
 db = SQLAlchemy()
 
@@ -15,14 +17,26 @@ db = SQLAlchemy()
     Create and configure an instance of the Flask application.
 
     Initializes the database and migrations using Flask-SQLAlchemy and Flask-Migrate.
-    Registers the 'api' Blueprint for handling routes.
+    Registers the 'auth' Blueprint for handling user related routes.
 
     Returns:
         app: The Flask application instance.
     """
-def create_app():
+def create_app():    
     app = Flask(__name__)
-    app.config.from_object(Config)
+    env = os.getenv('FLASK_ENV')
+
+    if env == 'development':
+        # Development configuration
+        app.config.from_object(Config)
+    elif env == 'testing':
+        # Testing configuration
+        app.config.from_object(TestingConfig)
+    else:
+        # Default to production configuration
+        app.config.from_object(Config)
+    
+    CORS(app) 
 
     db.init_app(app)
     Migrate(app, db)
@@ -31,11 +45,11 @@ def create_app():
 
     # Import routes and models
     from .models import User  # Assuming User is a model in models.py
-    from .routes import api  # Assuming api is defined in routes.py
+    from .auth import auth  # Assuming api is defined in routes.py
     from .itineraryRoutes import itinerary # Assuming itinerary is defined in itineraryRoutes.py
 
     # Register the api Blueprint with the app
-    app.register_blueprint(api)
+    app.register_blueprint(auth)
     app.register_blueprint(itinerary)
     
     return app

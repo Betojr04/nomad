@@ -14,7 +14,11 @@ class Config:
         SQLALCHEMY_TRACK_MODIFICATIONS (bool): Flag to track modifications of objects and emit signals.
         JWT_SECRET_KEY (str): Secret key used for JWT authentication.
     """
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:Beto@localhost:5433/nomad'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_SECRET_KEY = 'Echelon'
     
+    
+class TestingConfig(Config):
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:Beto@localhost:5433/nomad_test'
+    TESTING = True
