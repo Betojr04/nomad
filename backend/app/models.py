@@ -31,6 +31,13 @@ class User(db.Model):
     password_hash = db.Column(db.String(80), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     itinerary = db.relationship('Itinerary', backref='user', lazy=True)
+    following_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    followers_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    comments_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    likes_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    direct_messages_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    
+    
     
     def __repr__(self):
         """
@@ -116,3 +123,35 @@ class Event(db.Model):
 # DATA MODEL FOR LOCATIONS
 class Locations(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+
+# DATA MODEL FOR FOLLOWERS
+class Followers(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    
+
+# DATA MODEL FOR FOLLOWING
+class Following(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+# DATA MODEL FOR COMMENTS
+class Comments(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    
+
+# DATA MODEL FOR LIKES
+class Likes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    
+
+# DATA MODLES FOR DIRECT MESSAGES
+class DirectMessages(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+
