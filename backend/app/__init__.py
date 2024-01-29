@@ -44,13 +44,15 @@ def create_app():
     jwt=JWTManager(app)
 
     # Import routes and models
-    from .models import User  # Assuming User is a model in models.py
-    from .auth import auth  # Assuming api is defined in routes.py
-    from .itineraryRoutes import itinerary # Assuming itinerary is defined in itineraryRoutes.py
+    from .models import User  
+    from .auth import auth  
+    from .itineraryRoutes import itinerary
+    from .socialRoutes import social
 
     # Register the api Blueprint with the app
     app.register_blueprint(auth)
     app.register_blueprint(itinerary)
+    app.register_blueprint(social)
     
     return app
 

@@ -130,12 +130,7 @@ class Locations(db.Model):
 class Followers(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    
 
-# DATA MODEL FOR FOLLOWING
-class Following(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 # DATA MODEL FOR COMMENTS
 class Comments(db.Model):
