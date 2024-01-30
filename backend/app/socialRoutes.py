@@ -19,19 +19,40 @@ def get_followers():
 """
 ROUTE FOR RETREIVING A USERS FOLLOWING
 """
+@social.route('/following', methods=['GET'])
+@jwt_required()
+def get_following():
+    current_user_id = get_jwt_identity()
 
 """
 ROUTE FOLLOWING A NEW PERSON
 """
+@social.route('/follow', methods=['POST'])
+@jwt_required()
+def follow():
+    current_user_id = get_jwt_identity()
+    
 
 """
 ROUTE FOR UNFOLLOWING SOMEONE
 """
+@social.route('/unfollow', methods=['POST'])
+@jwt_required()
+def unfollow():
+    current_user_id = get_jwt_identity()
 
 """
 ROUTE FOR REQUESTING TO FOLLOW SOMEONE THAT IS ON PRIVATE
 """
+@social.route('/request', methods=['POST'])
+@jwt_required()
+def request_to_follow():
+    current_user_id = get_jwt_identity()
 
 """
 ROUTE FOR ACCEPTING OR DENYING SOMEONES FOLLOW REQUEST
 """
+@social.route('/request', methods=['PUT'])
+@jwt_required()
+def accept_deny_request():
+    current_user_id = get_jwt_identity()
